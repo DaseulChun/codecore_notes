@@ -20,7 +20,7 @@ class RectangleTest < MiniTest::Test
     assert_equal(10, perimeter)
 
     # Same as:
-    # asser_equal(10, Rectangle.new(2, 3), perimeter)
+    # asser_equal(10, Rectangle.new(2, 3).perimeter)
   end
 
   def test_initialize_raises_error_with_neg_args
