@@ -11,6 +11,7 @@ document.querySelectorAll('a').length
 const links = document.querySelectorAll('a')
 for (let link of links) {
   link.innerHTML = 'daseul';}
+links.forEach(link => {link.innerHTML = 'daseul'});
 
 // Make Craigslist's logo link to http://www.google.com
 document.querySelector('#logo').children[0].setAttribute('href', 'http://www.google.com');
