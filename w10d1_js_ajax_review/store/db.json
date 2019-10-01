@@ -1,0 +1,47 @@
+{
+  "students": [
+      {
+          "id": "Arman",
+          "age": 22,
+          "gender": "male"
+      },
+      {
+          "id": "Raman",
+          "age": 23,
+          "gender": "male"
+      },
+      {
+          "id": "Helin",
+          "age": 22,
+          "gender": "female"
+      },
+      {
+          "id": "Reyhan",
+          "age": 21,
+          "gender": "female"
+      },
+      {
+          "id": "Asrin",
+          "age": 25,
+          "gender": "female"
+      }
+  ],
+  "departments": [
+      {
+          "id": 1,
+          "name": "Computer Science"
+      },
+      {
+          "id": 2,
+          "name": "Mathmatics"
+      },
+      {
+          "id": 3,
+          "name": "Biology"
+      },
+      {
+          "id": 4,
+          "name": "Geology"
+      }
+  ]
+}
