@@ -41,8 +41,8 @@ const Question = {
   },
   create(params) {
     return fetch(`${BASE_URL}/questions`, {
-      credentials: 'include',
-      method: 'POST',
+      credentials: "include",
+      method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
@@ -51,8 +51,8 @@ const Question = {
   },
   update(id, params) {
     return fetch(`${BASE_URL}/questions/${id}`, {
-      credentials: 'include',
-      method: 'PATCH',
+      credentials: "include",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json"
       },
@@ -61,26 +61,50 @@ const Question = {
   }
 };
 
+// This is just a helper module to sign users in
+const Session = {
+  create(params) {
+    return fetch(`${BASE_URL}/session`, {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(params)
+    }).then(res => res.json());
+  }
+};
+
+Session.create({
+  // This is a very bad bad bad hacky practise, DO NOT DO IT
+  // instead have your credentials saved in a secret file and call it from here
+  // and the password might come from user forms
+  email: "hano@codecore.com",
+  password: "supersecret"
+});
+
 // just a test case we don't really need to keep that in our application
 if (false) {
   // get all questions
   Question.all().then(questions => console.table(questions));
   // get a single quesiton
-  Question.one(1616).then(res => console.log(res));
+  Question.one(31).then(res => console.log(res));
   // Create a question
   Question.create({
-    title: "my awesome question",
+    title: "my Awesome Question",
     body: "This is the best question I have ever heard"
-  }). then(res => console.log(res));
-  // Update a question
+  }).then(res => console.log(res));
+
+  // Update a Question
   let updateQuestion = {
-    title: "update checking",
-    body: "yayyyyyyyyyy it worked!"
-  }
-  Question.update(1623, updateQuestion);
+    title: "What is your favorite pet?",
+    body: "olive olive olive olive"
+  };
+
+  Question.update(215, updateQuestion);
 }
 
-// render all questions
+// reder all questions
 function renderingQuestions(questions) {
   // we will use this function to render all question to dom
   // Process to get all questions
@@ -122,6 +146,7 @@ function renderQuestionDetails(question) {
   questionDetailsContainer.innerHTML = htmlString;
 }
 
+// 1. ca
 
 // refresh questions
 function refreshQuestions() {
@@ -183,10 +208,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // refresh questions when dom content loaded
+  refreshQuestions();
+
   // Add a click event listener to each question
   // const questionDetailsContainer = document.querySelector('#question-show');
   document.querySelector("ul.question-list").addEventListener("click", event => {
-    const questionLink = event.target.closest("[data-id]");
+    const questionLink = event.target.closest("a.question-link");
     if (questionLink) {
       event.preventDefault();
 
@@ -196,26 +224,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Create a Question
   // Add event listener to create question button
-  const newQuestionForm = document.querySelector('#new-question-form');
-  newQuestionForm.addEventListener('submit', event => {
+  const newQuestionForm = document.querySelector("#new-question-form");
+  newQuestionForm.addEventListener("submit", event => {
     event.preventDefault();
 
-    // this will gonna grab the inputs from the form
-    // and create an object for you
     const formData = new FormData(event.target);
-    
-    const newQuestion =  {
-      title: formData.get('title'),
-      body: formData.get('body')
+
+    const newQuestion = {
+      title: formData.get("title"),
+      body: formData.get("body")
     };
- 
     // call Question.create function that we created with newQuestion
     Question.create(newQuestion).then(question => {
       // clear form
       newQuestionForm.reset();
       // display the question that we just created
-      // we already have question show functionality so we can use it here 
+      // we already have question show functionality so we can use it here
       getAndDisplayQustion(question.id);
     });
   });
@@ -223,7 +249,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Pre populate and navigate to the question that we want to update
   document.querySelector("#question-show").addEventListener("click", event => {
     const link = event.target.closest("[data-target]");
- 
     if (link) {
       event.preventDefault();
       // populate the form with question data
@@ -252,27 +277,5 @@ document.addEventListener("DOMContentLoaded", () => {
       // get and display it
       getAndDisplayQustion(question.id);
     });
-  })
-});
-
-// This is just a helper module to sign users in
-const Session = {
-  create(params) {
-    return fetch(`${BASE_URL}/session`, {
-      credentials: "include",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(params)
-    }).then(res => res.json());
-  }
-};
-
-Session.create({
-  // This is a very bad bad bad hacky practise, DO NOT DO IT
-  // instead have your credentials saved in a secret file and call it from here
-  // and the password might come from user forms
-  email: "js@winterfell.gov",
-  password: "supersecret"
+  });
 });
