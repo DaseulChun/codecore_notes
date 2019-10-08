@@ -57,7 +57,13 @@ if (false) {
   Product.one(452).then(data => console.log(data));
   // get all products
   Product.all().then(products => console.log(products));
+  Product.create({
+    title: "milk which is expired yesterday-5",
+    description: "very fresh!",
+    price: "99.99"
+  }).then(data => console.log(data));
 }
+
 
 // Render all products
 // 1. we click on the product link => wanna trigger an on click event
@@ -94,8 +100,6 @@ function renderProductDetails(product) {
       `;
   productDetailsContainer.innerHTML = htmlString;
 }
-
-// Product.one(338).then(product => renderProductDetails(product)).then(() =>)
 
 // Get and Display a single product
 function getAndDisplayProduct(id) {
@@ -161,6 +165,29 @@ document.addEventListener('DOMContentLoaded', () => {
       getAndDisplayProduct(id);
     }
   });
+
+  // Add event listener to create product button
+  const newProductForm = document.querySelector('#new-product-form');
+  newProductForm.addEventListener('submit', event => {
+    event.preventDefault();
+
+    // grab the inputs from the form and create an object for you
+    const formData = new FormData(event.target);
+    const newProduct = {
+      title: formData.get('title'),
+      description: formData.get("description"),
+      price: formData.get('price')
+    };
+
+    // Call Product.create function that we created with newProduct
+    Product.create(newProduct).then(product => {
+      // clear form
+      newProductForm.reset();
+      // display the question that we just created
+      getAndDisplayProduct(product.id);
+    });
+  });
+
 
 })
 
