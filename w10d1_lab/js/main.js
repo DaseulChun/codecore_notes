@@ -92,7 +92,7 @@ function renderProductDetails(product) {
         <p>${product.description}</p>
         <p>${formatDollar(product.price)}</p>
         <small>Posted by: ${product.seller.full_name}</small>
-        <a>Edit</a>
+        <a class="link" data-target="product-edit" data-id="${product.id}" href="">Edit</a>
         <h3>Reviews</h3>
         <ul>
           ${product.reviews.map(r => `<li>${r.rating} Star | ${r.body}</li>`).join("")}
@@ -114,6 +114,16 @@ function getAndDisplayProduct(id) {
 // Refresh Products
 function refreshProducts() {
   Product.all().then(products => renderingProducts(products));
+}
+
+// populate form
+function populateForm(id) {
+  Product.one(id).then(product => {
+    document.querySelector('#edit-product-form [name=title]').value = product.title;
+    document.querySelector('#edit-product-form [name=description]').value = product.description;
+    document.querySelector('#edit-product-form [name=price]').value = product.price;
+    document.querySelector('#edit-product-form [name=id]').value = product.id;
+  });
 }
 
 // Navigation
@@ -188,7 +198,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // pre-populate and navigate to the product that we want to update
+  document.querySelector('#product-show').addEventListener("click", event => {
+    const link = event.target.closest("[data-target]");
+console.log(link);
+    if (link) {
+      event.preventDefault();
+      // populate the form with product data
+      populateForm(link.getAttribute("data-id"));
+      // Navigate to the product that we want to update
+      const targetPage = link.getAttribute("data-target");
+      navigateTo(targetPage);
+    }
+  });
 
+  // update a question
+  const editProductForm = document.querySelector('#edit-product-form');
+  editProductForm.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const updatedProduct = {
+      title: formData.get('title'),
+      description: formData.get("description"),
+      price: formData.get('price')
+    };
+
+    Product.update(formData.get("id"), updatedProduct).then(product => {
+      // clear form
+      editProductForm.reset();
+      // get and display it
+      getAndDisplayProduct(product.id);
+    })
+  })
 })
 
 // Helper module to sign users in
